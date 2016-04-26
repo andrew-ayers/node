@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Form Upload Test</title>
+	</head>
+	<body>
+		<h2>Form Upload Test</h2>
+		<div>
+			{$filename}
+		</div>
+		<div>
+			<form action="./formupload" method="post" enctype="multipart/form-data">
+				File: <input type="file" name="fileupload">
+				<br/>
+				<input type="submit" value="Submit">
+			</form>
+		</div>
+		<div style="padding-top: 20px;">
+			<a href="/">Return Home</a>
+		</div>				
+	</body>
+</html>

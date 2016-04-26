@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Form Submit Test</title>
+	</head>
+	<body>
+		<h2>Form Submit Test</h2>		
+		<div>
+			{$list}
+			<br/>
+			{$data}
+		</div>
+		<div>
+			<form action="./formsubmit" method="post">
+				First name: <input type="text" name="firstname">
+				<br/>
+				Last name: <input type="text" name="lastname">
+				<br/>
+				<input type="submit" value="Submit">
+			</form>
+		</div>
+		<div style="padding-top: 20px;">
+			<a href="/">Return Home</a>
+		</div>		
+	</body>
+</html>

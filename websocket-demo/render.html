@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <meta charset="UTF-8">
+  <title>Mobile Sensors - Renderer</title>
+  
+  <style type="text/css">
+    body {
+      font-family: sans-serif;
+    }
+  
+      .main {
+      border: 1px solid black;
+      box-shadow: 10px 10px 5px #888;
+      border-radius: 12px;
+      padding: 20px;
+      background-color: #ddd;
+      margin: 25px;
+      width: 450px;
+      margin-left:auto;
+      margin-right:auto;  
+    }
+    
+    .logo {
+      width:275px;
+      margin-left: auto;
+      margin-right: auto;
+      display: block;
+      padding: 15px;
+    }
+    
+    .container {
+      -webkit-perspective: 300; perspective: 300;
+    }
+  </style>
+</head>
+<body>
+  <div class="main">
+      <h2>Device Orientation</h2>
+      <table>
+        <tbody>
+        <tr>
+          <td>Tilt Left/Right [gamma]</td>
+          <td id="doTiltLR">0</td>
+        </tr>
+        <tr>
+          <td>Tilt Front/Back [beta]</td>
+          <td id="doTiltFB">0</td>
+        </tr>
+        <tr>
+          <td>Direction [alpha]</td>
+          <td id="doDirection">0</td>
+        </tr>
+      </tbody></table>
+  </div>
+  
+  <div class="container" style="-webkit-perspective: 300; perspective: 300;">
+    <img src="resources/test.gif" id="imgLogo" class="logo" title="" style="outline: red dashed 1px;">
+  </div>
+
+<script type="text/javascript">
+//<![CDATA[
+	const HOST = "%HOST%";
+	const PORT = %PORT%;
+//]]>
+</script>
+  
+  <script type="text/javascript">
+    init();
+    var count = 0;
+    
+    function init() {
+
+		// create a new websocket to server
+		var ws = new WebSocket('ws://' + HOST + ':' + PORT + '/');
+
+		// when the client is opened (refreshed or loaded), do something
+		ws.onopen = function() {
+		}
+
+		// when the client gets a message from the server - do something
+		ws.onmessage = function(e) {
+		  eventData = String(e.data).split(",");
+		
+          // alpha is the compass direction the device is facing in degrees
+          var dir = eventData[0];
+
+          // beta is the front-to-back tilt in degrees, where front is positive
+          var tiltFB = eventData[1];
+
+          // gamma is the left-to-right tilt in degrees, where right is positive
+          var tiltLR = eventData[2];
+          
+          // call our orientation event handler
+          deviceOrientationHandler(tiltLR, tiltFB, dir);
+        } 
+    }
+  
+    function deviceOrientationHandler(tiltLR, tiltFB, dir) {
+      document.getElementById("doTiltLR").innerHTML = Math.round(tiltLR);
+      document.getElementById("doTiltFB").innerHTML = Math.round(tiltFB);
+      document.getElementById("doDirection").innerHTML = Math.round(dir);
+      
+      // Apply the transform to the image
+      var logo = document.getElementById("imgLogo");
+      logo.style.webkitTransform = "rotate("+ tiltLR +"deg) rotate3d(1,0,0, "+ (tiltFB*-1)+"deg)";
+      logo.style.MozTransform = "rotate("+ tiltLR +"deg)";
+      logo.style.transform = "rotate("+ tiltLR +"deg) rotate3d(1,0,0, "+ (tiltFB*-1)+"deg)";
+    }
+    
+    
+    // Some other fun rotations to try...
+    //var rotation = "rotate3d(0,1,0, "+ (tiltLR*-1)+"deg) rotate3d(1,0,0, "+ (tiltFB*-1)+"deg)";
+    //var rotation = "rotate("+ tiltLR +"deg) rotate3d(0,1,0, "+ (tiltLR*-1)+"deg) rotate3d(1,0,0, "+ (tiltFB*-1)+"deg)";
+  </script>
+</body></html>
